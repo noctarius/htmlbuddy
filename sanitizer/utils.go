@@ -10,8 +10,6 @@ import (
 
 type Sanitizer = func(node, parent *html.Node) error
 
-type SanitizerFactory = func(arguments ... string) Sanitizer
-
 type Style struct {
 	styles []*css.Declaration
 }
@@ -124,10 +122,8 @@ func CreateTag(tag string) *html.Node {
 }
 
 func MoveNode(node, oldParent, newParent *html.Node) {
-	//clonedNode := CloneNode(node)
 	oldParent.RemoveChild(node)
 	newParent.AppendChild(node)
-	//RemoveNode(oldParent, node)
 }
 
 func RemoveNode(parent, node *html.Node) {
@@ -173,48 +169,4 @@ func CloneNode(n *html.Node) *html.Node {
 	}
 
 	return nn
-}
-
-func Prettify(raw string, indent string) (pretty string, e error) {
-	r := strings.NewReader(raw)
-	z := html.NewTokenizer(r)
-	pretty = ""
-	depth := 0
-	prevToken := html.CommentToken
-	for {
-		tt := z.Next()
-		tokenString := string(z.Raw())
-
-		// strip away newlines
-		if tt == html.TextToken {
-			stripped := strings.Trim(tokenString, "\n")
-			if len(stripped) == 0 {
-				continue
-			}
-		}
-
-		if tt == html.EndTagToken {
-			depth -= 1
-		}
-
-		if tt != html.TextToken {
-			if prevToken != html.TextToken {
-				pretty += "\n"
-				for i := 0; i < depth; i++ {
-					pretty += indent
-				}
-			}
-		}
-
-		pretty += tokenString
-
-		// last token
-		if tt == html.ErrorToken {
-			break
-		} else if tt == html.StartTagToken {
-			depth += 1
-		}
-		prevToken = tt
-	}
-	return strings.Trim(pretty, "\n"), nil
 }
