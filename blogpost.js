@@ -5,7 +5,7 @@ sanitizers(
     sanitize("a[id^='post-']", DeleteElementAndMoveChildrenToParent),
     sanitize("td p", DeleteElementAndMoveChildrenToParent),
     sanitize("table", AddStyleDeclaration("width", "100%")),
-    sanitize("h1,h2,h3,h5,h6,h7,h8,h9", ReplaceElementAndReassignChildren("h4")),
+    sanitize("h1, h2, h3, h5, h6, h7, h8, h9", ReplaceElementAndReassignChildren("h4")),
     sanitize("p h1, p h2, p h3, p h4, p h5, p h6, p h7, p h8, p h9", SelectParent(
         DeleteElementAndMoveChildrenToParent)
     ),
