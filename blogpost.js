@@ -1,18 +1,38 @@
 sanitizers(
+    // Remove implicit head, added by html parser
     sanitize("head", DeleteNodeAndChildren),
+
+    // Remove implicit body, added by html parser
     sanitize("body", DeleteElementAndMoveChildrenToParent),
+
+    // Remove implicit head, added by html parser
     sanitize("html", DeleteElementAndMoveChildrenToParent),
+
+    // Remove anchor elements from headings
     sanitize("a[id^='post-']", DeleteElementAndMoveChildrenToParent),
+
+    // Remove paragraph from tables
     sanitize("td p", DeleteElementAndMoveChildrenToParent),
+
+    // Adjust table width
     sanitize("table", SetStyleDeclaration("width", "100%")),
+
+    // Set all headers to h4
     sanitize("h1, h2, h3, h5, h6, h7, h8, h9", ReplaceElementAndReassignChildren("h4")),
+
+    // Remove possible paragraphs before headings
     sanitize("p h1, p h2, p h3, p h4, p h5, p h6, p h7, p h8, p h9", SelectParent(
         DeleteElementAndMoveChildrenToParent)
     ),
+
+    // Setup links with lightbox for images
     sanitize("a:not([data-rel='lightbox'])", And(
         SetAttribute("target", "_blank"),
         SetAttribute("rel", "noopener")
     )),
+
+    // Configure images to use lightbox and have a slight border,
+    // also generates alternative text from filename
     sanitize("img", And(
         InjectOuterElement("a"),
         SelectParent(
@@ -25,12 +45,16 @@ sanitizers(
         SetAttributeWithExtractor("alt", generateAlt),
         DeleteAttribute("class")
     )),
+
+    // Exchanges paragraphs with markdown styled code-blocks: ```-based
     sanitize("p", Filter(
         isCodeBlock,
         And(
             ReplaceElementAndReassignChildren("code"),
-            SetAttribute("class", "java"),
+            //SetAttribute("class", "java"),
             InjectOuterElement("pre"),
+
+            // Removes the backticks
             fixCodeBlock
         )
     ))
