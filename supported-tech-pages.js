@@ -17,8 +17,8 @@ sanitizers(
     // Adjust table width
     sanitize("table", SetStyleDeclaration("width", "100%")),
 
-    // Set all headers to h3
-    sanitize("h1, h2, h3, h5, h6, h7, h8, h9", ReplaceElementAndReassignChildren("h3")),
+    // Set all headers to h4
+    sanitize("h1, h2, h3, h5, h6, h7, h8, h9", ReplaceElementAndReassignChildren("h4")),
 
     // Remove possible paragraphs before headings
     sanitize("p h1, p h2, p h3, p h4, p h5, p h6, p h7, p h8, p h9", SelectParent(
@@ -41,32 +41,10 @@ sanitizers(
                 SetAttributeWithExtractor("href", extractHref)
             )
         ),
-        SetStyleDeclaration("border", "1px solid DarkSlateGray"),
         SetAttributeWithExtractor("alt", generateAlt),
         DeleteAttribute("class")
-    )),
-
-    // Exchanges paragraphs with markdown styled code-blocks: ```-based
-    sanitize("p", Filter(
-        isCodeBlock,
-        And(
-            ReplaceElementAndReassignChildren("code"),
-            //SetAttribute("class", "java"),
-            InjectOuterElement("pre"),
-
-            // Removes the backticks
-            fixCodeBlock
-        )
     ))
 );
-
-function fixCodeBlock(node) {
-    var first = node.FirstChild;
-    var last = node.LastChild;
-
-    first.Data = first.Data.substring(3);
-    last.Data = last.Data.substring(0, last.Data.length - 4);
-}
 
 function extractHref(node) {
     var ret = api.getAttribute(node.FirstChild, "src");
