@@ -45,7 +45,9 @@ sanitizers(
             )
         ),
         SetAttributeWithExtractor("alt", generateAlt),
-        DeleteAttribute("class")
+        DeleteAttribute("class"),
+        DeleteAttribute("height"),
+        SetAttribute("width", "730")
     )),
 
     // Remove attributes added by google spreadsheet

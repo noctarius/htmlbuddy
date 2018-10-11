@@ -109,13 +109,23 @@ func GetAttribute(node *html.Node, attribute string) (html.Attribute, bool) {
 }
 
 func SetAttribute(node *html.Node, attribute, value string) {
+	attributes := make([]html.Attribute, 0)
+
+	found := false
 	for _, attr := range node.Attr {
 		if strings.EqualFold(attr.Key, attribute) {
-			attr.Val = value
-			return
+			attributes = append(attributes, html.Attribute{Key:attribute, Val:value})
+			found = true
+		} else {
+			attributes = append(attributes, attr)
 		}
 	}
-	node.Attr = append(node.Attr, html.Attribute{Key: attribute, Val: value})
+
+	if !found {
+		attributes = append(attributes, html.Attribute{Key: attribute, Val: value})
+	}
+
+	node.Attr = attributes
 }
 
 func RemoveAttribute(node *html.Node, attribute string) {
