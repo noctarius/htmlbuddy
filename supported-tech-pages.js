@@ -71,7 +71,7 @@ function pushNbsp(node) {
 
 function isEmptyNode(node) {
     for (var child = node.FirstChild; child != null; child = child.NextSibling) {
-        if (child.Type == NodeType.TextNode) {
+        if (child.Type === NodeType.TextNode) {
             if (child.Data.trim().length === 0) {
                 continue;
             }
