@@ -1,0 +1,216 @@
+{
+	"version": 0,
+	"dependencies": [
+		{
+			"importpath": "github.com/Joker/hpp",
+			"repository": "https://github.com/Joker/hpp",
+			"vcs": "git",
+			"revision": "6893e659854a10c76c4601fc1bee67a064a26238",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/andybalholm/cascadia",
+			"repository": "https://github.com/andybalholm/cascadia",
+			"vcs": "git",
+			"revision": "901648c87902174f774fac311d7f176f8647bdaa",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/aymerick/douceur/css",
+			"repository": "https://github.com/aymerick/douceur",
+			"vcs": "git",
+			"revision": "f9e29746e1161076eae141dd235f5d98b546ec3e",
+			"branch": "master",
+			"path": "/css",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/aymerick/douceur/parser",
+			"repository": "https://github.com/aymerick/douceur",
+			"vcs": "git",
+			"revision": "f9e29746e1161076eae141dd235f5d98b546ec3e",
+			"branch": "master",
+			"path": "/parser",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/dlclark/regexp2",
+			"repository": "https://github.com/dlclark/regexp2",
+			"vcs": "git",
+			"revision": "7632a260cbaf5e7594fc1544a503456ecd0827f1",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/dop251/goja",
+			"repository": "https://github.com/dop251/goja",
+			"vcs": "git",
+			"revision": "ef8c030e3c96c5054c2f10ef925e7041e0583c07",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/dop251/goja_nodejs/console",
+			"repository": "https://github.com/dop251/goja_nodejs",
+			"vcs": "git",
+			"revision": "adff31b136e6b7e044712aab7236a775e1bd085e",
+			"branch": "master",
+			"path": "/console",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/dop251/goja_nodejs/require",
+			"repository": "https://github.com/dop251/goja_nodejs",
+			"vcs": "git",
+			"revision": "adff31b136e6b7e044712aab7236a775e1bd085e",
+			"branch": "master",
+			"path": "require",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/dop251/goja_nodejs/util",
+			"repository": "https://github.com/dop251/goja_nodejs",
+			"vcs": "git",
+			"revision": "adff31b136e6b7e044712aab7236a775e1bd085e",
+			"branch": "master",
+			"path": "util",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/go-sourcemap/sourcemap",
+			"repository": "https://github.com/go-sourcemap/sourcemap",
+			"vcs": "git",
+			"revision": "b019cc30c1eaa584753491b0d8f8c1534bf1eb44",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/gorilla/css/scanner",
+			"repository": "https://github.com/gorilla/css",
+			"vcs": "git",
+			"revision": "398b0b046082ecb3694c01bec6b336a06a4e530a",
+			"branch": "master",
+			"path": "/scanner",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/net/html",
+			"repository": "https://go.googlesource.com/net",
+			"vcs": "git",
+			"revision": "146acd28ed5894421fb5aac80ca93bc1b1f46f87",
+			"branch": "master",
+			"path": "/html",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/text/cases",
+			"repository": "https://go.googlesource.com/text",
+			"vcs": "git",
+			"revision": "4d1c5fb19474adfe9562c9847ba425e7da817e81",
+			"branch": "master",
+			"path": "cases",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/text/collate",
+			"repository": "https://go.googlesource.com/text",
+			"vcs": "git",
+			"revision": "4d1c5fb19474adfe9562c9847ba425e7da817e81",
+			"branch": "master",
+			"path": "collate",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/text/encoding",
+			"repository": "https://go.googlesource.com/text",
+			"vcs": "git",
+			"revision": "4d1c5fb19474adfe9562c9847ba425e7da817e81",
+			"branch": "master",
+			"path": "encoding",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/text/internal",
+			"repository": "https://go.googlesource.com/text",
+			"vcs": "git",
+			"revision": "4d1c5fb19474adfe9562c9847ba425e7da817e81",
+			"branch": "master",
+			"path": "internal",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/text/language",
+			"repository": "https://go.googlesource.com/text",
+			"vcs": "git",
+			"revision": "4d1c5fb19474adfe9562c9847ba425e7da817e81",
+			"branch": "master",
+			"path": "language",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/text/runes",
+			"repository": "https://go.googlesource.com/text",
+			"vcs": "git",
+			"revision": "4d1c5fb19474adfe9562c9847ba425e7da817e81",
+			"branch": "master",
+			"path": "runes",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/text/secure/bidirule",
+			"repository": "https://go.googlesource.com/text",
+			"vcs": "git",
+			"revision": "4d1c5fb19474adfe9562c9847ba425e7da817e81",
+			"branch": "master",
+			"path": "secure/bidirule",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/text/transform",
+			"repository": "https://go.googlesource.com/text",
+			"vcs": "git",
+			"revision": "4d1c5fb19474adfe9562c9847ba425e7da817e81",
+			"branch": "master",
+			"path": "transform",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/text/unicode/bidi",
+			"repository": "https://go.googlesource.com/text",
+			"vcs": "git",
+			"revision": "4d1c5fb19474adfe9562c9847ba425e7da817e81",
+			"branch": "master",
+			"path": "unicode/bidi",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/text/unicode/cldr",
+			"repository": "https://go.googlesource.com/text",
+			"vcs": "git",
+			"revision": "4d1c5fb19474adfe9562c9847ba425e7da817e81",
+			"branch": "master",
+			"path": "unicode/cldr",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/text/unicode/norm",
+			"repository": "https://go.googlesource.com/text",
+			"vcs": "git",
+			"revision": "4d1c5fb19474adfe9562c9847ba425e7da817e81",
+			"branch": "master",
+			"path": "/unicode/norm",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/text/unicode/rangetable",
+			"repository": "https://go.googlesource.com/text",
+			"vcs": "git",
+			"revision": "4d1c5fb19474adfe9562c9847ba425e7da817e81",
+			"branch": "master",
+			"path": "unicode/rangetable",
+			"notests": true
+		}
+	]
+}
