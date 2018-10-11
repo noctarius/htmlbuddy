@@ -43,6 +43,11 @@ sanitizers(
         ),
         SetAttributeWithExtractor("alt", generateAlt),
         DeleteAttribute("class")
+    )),
+
+    sanitize("td", And(
+        DeleteAttribute("width"),
+        DeleteAttribute("data-sheets-value")
     ))
 );
 
