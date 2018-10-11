@@ -29,13 +29,17 @@ func (s *Style) Declaration(key string) (string, bool) {
 }
 
 func (s *Style) SetDeclaration(key, value string) {
+	found := false
 	for _, style := range s.styles {
 		if strings.EqualFold(style.Property, key) {
 			style.Value = value
+			found = true
 		}
 	}
 
-	s.styles = append(s.styles, &css.Declaration{Property: key, Value: value, Important: false})
+	if !found {
+		s.styles = append(s.styles, &css.Declaration{Property: key, Value: value, Important: false})
+	}
 }
 
 func (s *Style) RemoveDeclaration(key string) {
