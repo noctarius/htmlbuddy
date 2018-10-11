@@ -438,6 +438,8 @@ interface Api {
 
     createTag(tagName: String): Node;
 
+    createTextNode(value: String): Node;
+
     moveNode(node: Node, oldParent: Node, newParent: Node): void;
 
     removeNode(parent: Node, node: Node): void;
@@ -449,6 +451,8 @@ interface Api {
     children(node: Node): Node[];
 
     cloneNode(node: Node): Node;
+
+    appendNode(node: Node, parent: Node): void;
 }
 
 const api = Api;

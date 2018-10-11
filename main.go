@@ -54,7 +54,10 @@ func main() {
 		html.Render(buffer, node)
 	}
 
-	os.Stdout.WriteString(hpp.PrPrint(buffer.String()))
+	pretty := hpp.PrPrint(buffer.String())
+	pretty = strings.Replace(pretty, "$$", "&", -1)
+
+	os.Stdout.WriteString(pretty)
 }
 func registerNativeImplementations(node *html.Node, runtime *goja.Runtime) {
 	global := runtime.GlobalObject()
@@ -80,7 +83,12 @@ func registerNativeImplementations(node *html.Node, runtime *goja.Runtime) {
 	api.Set("replaceNode", sanitizer.ReplaceNode)
 	api.Set("children", sanitizer.Children)
 	api.Set("cloneNode", sanitizer.CloneNode)
+	api.Set("createTextNode", sanitizer.CreateTextNode)
+	api.Set("appendNode", sanitizer.AppendNode)
 	global.Set("api", api)
+
+	buildNodeType(runtime)
+	buildAtom(runtime)
 
 	console := runtime.NewObject()
 	console.Set("log", func(msg string) {

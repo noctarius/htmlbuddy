@@ -15,15 +15,18 @@ sanitizers(
     sanitize("td p", DeleteElementAndMoveChildrenToParent),
 
     // Adjust table width
-    sanitize("table", SetStyleDeclaration("width", "100%")),
+    sanitize("table", And(
+        DeleteAttribute("width"),
+        SetStyleDeclaration("width", "100%")
+    )),
 
     // Set all headers to h4
     sanitize("h1, h2, h3, h5, h6, h7, h8, h9", ReplaceElementAndReassignChildren("h4")),
 
     // Remove possible paragraphs before headings
     sanitize("p h1, p h2, p h3, p h4, p h5, p h6, p h7, p h8, p h9", SelectParent(
-        DeleteElementAndMoveChildrenToParent)
-    ),
+        DeleteElementAndMoveChildrenToParent
+    )),
 
     // Setup links with lightbox for images
     sanitize("a:not([data-rel='lightbox'])", And(
@@ -45,11 +48,38 @@ sanitizers(
         DeleteAttribute("class")
     )),
 
+    // Remove attributes added by google spreadsheet
     sanitize("td", And(
         DeleteAttribute("width"),
         DeleteAttribute("data-sheets-value")
+    )),
+
+    // Remove empty links
+    sanitize("a", Filter(
+        isEmptyNode, DeleteNodeAndChildren
+    )),
+
+    // Add nbsp to empty tds
+    sanitize("td", Filter(
+        isEmptyNode, pushNbsp
     ))
 );
+
+function pushNbsp(node) {
+    api.appendNode(api.createTextNode("$$nbsp;"), node);
+}
+
+function isEmptyNode(node) {
+    for (var child = node.FirstChild; child != null; child = child.NextSibling) {
+        if (child.Type == NodeType.TextNode) {
+            if (child.Data.trim().length === 0) {
+                continue;
+            }
+        }
+        return false;
+    }
+    return true;
+}
 
 function extractHref(node) {
     var ret = api.getAttribute(node.FirstChild, "src");

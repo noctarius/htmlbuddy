@@ -60,6 +60,15 @@ func (s *Style) AttachStyle(node *html.Node) {
 	SetAttribute(node, "style", s.ComputeStyle())
 }
 
+func CreateTextNode(value string) *html.Node {
+	node := new(html.Node)
+	node.Type = html.TextNode
+	node.Data = value
+	node.DataAtom = 0
+	node.Attr = nil
+	return node
+}
+
 func IsTextOnly(node *html.Node) bool {
 	for child := node.FirstChild; child != nil; child = child.NextSibling {
 		if child.Type != html.TextNode {
@@ -100,6 +109,12 @@ func GetAttribute(node *html.Node, attribute string) (html.Attribute, bool) {
 }
 
 func SetAttribute(node *html.Node, attribute, value string) {
+	for _, attr := range node.Attr {
+		if strings.EqualFold(attr.Key, attribute) {
+			attr.Val = value
+			return
+		}
+	}
 	node.Attr = append(node.Attr, html.Attribute{Key: attribute, Val: value})
 }
 
@@ -123,6 +138,10 @@ func CreateTag(tag string) *html.Node {
 	node.Attr = make([]html.Attribute, 0)
 
 	return node
+}
+
+func AppendNode(node, parent *html.Node) {
+	parent.AppendChild(node)
 }
 
 func MoveNode(node, oldParent, newParent *html.Node) {
