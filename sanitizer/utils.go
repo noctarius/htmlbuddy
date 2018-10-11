@@ -10,6 +10,10 @@ import (
 
 type Sanitizer = func(node, parent *html.Node) error
 
+type Extractor = func(node *html.Node) string
+
+type Predicate = func(node *html.Node) bool
+
 type Style struct {
 	styles []*css.Declaration
 }

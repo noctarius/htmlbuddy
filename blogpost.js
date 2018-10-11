@@ -4,32 +4,32 @@ sanitizers(
     sanitize("html", DeleteElementAndMoveChildrenToParent),
     sanitize("a[id^='post-']", DeleteElementAndMoveChildrenToParent),
     sanitize("td p", DeleteElementAndMoveChildrenToParent),
-    sanitize("table", AddStyleDeclaration("width", "100%")),
+    sanitize("table", SetStyleDeclaration("width", "100%")),
     sanitize("h1, h2, h3, h5, h6, h7, h8, h9", ReplaceElementAndReassignChildren("h4")),
     sanitize("p h1, p h2, p h3, p h4, p h5, p h6, p h7, p h8, p h9", SelectParent(
         DeleteElementAndMoveChildrenToParent)
     ),
     sanitize("a:not([data-rel='lightbox'])", And(
-        AddAttribute("target", "_blank"),
-        AddAttribute("rel", "noopener")
+        SetAttribute("target", "_blank"),
+        SetAttribute("rel", "noopener")
     )),
     sanitize("img", And(
         InjectOuterElement("a"),
         SelectParent(
             And(
-                AddAttribute("data-rel", "lightbox"),
-                AddAttributeWithFunction("href", extractHref)
+                SetAttribute("data-rel", "lightbox"),
+                SetAttributeWithExtractor("href", extractHref)
             )
         ),
-        AddStyleDeclaration("border", "1px solid DarkSlateGray"),
-        AddAttributeWithFunction("alt", generateAlt),
+        SetStyleDeclaration("border", "1px solid DarkSlateGray"),
+        SetAttributeWithExtractor("alt", generateAlt),
         DeleteAttribute("class")
     )),
     sanitize("p", Filter(
         isCodeBlock,
         And(
             ReplaceElementAndReassignChildren("code"),
-            AddAttribute("class", "java"),
+            SetAttribute("class", "java"),
             InjectOuterElement("pre"),
             fixCodeBlock
         )
@@ -90,7 +90,7 @@ function isCodeBlock(node) {
     }
 
     var textNode = node.FirstChild;
-    var text = textNode.Data.toString().trim();
+    var text = textNode.Data.trim();
 
     if (!text.startsWith("```")) {
         return false;
@@ -98,9 +98,5 @@ function isCodeBlock(node) {
 
     textNode = node.LastChild;
     text = textNode.Data.trim();
-    if (!text.endsWith("```")) {
-        return false;
-    }
-
-    return true;
+    return text.endsWith("```");
 }

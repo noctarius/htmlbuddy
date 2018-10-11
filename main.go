@@ -1,16 +1,16 @@
 package main
 
 import (
+	"flag"
 	"github.com/Joker/hpp"
 	"github.com/andybalholm/cascadia"
+	"github.com/dop251/goja"
 	"golang.org/x/net/html"
-	"wordpress-sanitizer/sanitizer"
 	"io/ioutil"
+	"log"
 	"os"
 	"strings"
-	"flag"
-	"github.com/dop251/goja"
-	"log"
+	"wordpress-sanitizer/sanitizer"
 )
 
 var configFlag = flag.String("configuration", "", "")
@@ -59,7 +59,7 @@ func main() {
 func registerNativeImplementations(node *html.Node, runtime *goja.Runtime) {
 	global := runtime.GlobalObject()
 
-	for key, value := range sanitizer.AvailableSanitizers {
+	for key, value := range sanitizer.NativeAPI {
 		global.Set(key, runtime.ToValue(value))
 	}
 

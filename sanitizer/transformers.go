@@ -3,59 +3,41 @@ package sanitizer
 import (
 	"golang.org/x/net/html"
 	"golang.org/x/net/html/atom"
-	"path/filepath"
-	"strings"
-	"unicode"
 )
 
-var AvailableSanitizers = map[string]interface{}{
+var NativeAPI = map[string]interface{}{
 	"DeleteNodeAndChildren":                DeleteNodeAndChildren,
 	"DeleteElementAndMoveChildrenToParent": DeleteElementAndMoveChildrenToParent,
-	"AddStyleDeclaration":                  AddStyleDeclaration,
+	"SetStyleDeclaration":                  SetStyleDeclaration,
 	"ReplaceElementAndReassignChildren":    ReplaceElementAndReassignChildren,
 	"SelectParent":                         SelectParent,
 	"And":                                  And,
-	"AddAttribute":                         AddAttribute,
+	"SetAttribute":                         SetAttribute0,
 	"InjectOuterElement":                   InjectOuterElement,
-	"AddAttributeWithFunction":             AddAttributeWithFunction,
+	"SetAttributeWithExtractor":            SetAttributeWithExtractor,
 	"DeleteAttribute":                      DeleteAttribute,
 	"Filter":                               Filter,
+	"Filters":                              Filters,
 	"DeleteStyleDeclaration":               DeleteStyleDeclaration,
 }
 
-func generateAlt(node *html.Node) string {
-	if src, ok := GetAttribute(node, "src"); ok {
-		href := src.Val
-
-		index := strings.LastIndex(href, "/") + 1
-		alt := href[index:]
-		alt = strings.TrimSuffix(alt, filepath.Ext(alt))
-		alt = strings.Replace(alt, "-", " ", -1)
-		alt = strings.Replace(alt, ".", " ", -1)
-
-		builder := new(strings.Builder)
-		for i, rune := range alt {
-			lastRune := int32(' ')
-			if i > 0 {
-				lastRune = int32(alt[i-1])
-			}
-			if lastRune == ' ' && rune != ' ' {
-				lastRune = rune
-				rune = unicode.ToUpper(rune)
-			}
-			builder.WriteRune(rune)
-		}
-		return builder.String()
-	}
-	return ""
-}
-
-func Filter(filter func(node *html.Node) bool, sanitizer Sanitizer) Sanitizer {
+func Filter(predicate Predicate, sanitizer Sanitizer) Sanitizer {
 	return func(node, parent *html.Node) error {
-		if filter(node) {
+		if predicate(node) {
 			return sanitizer(node, parent)
 		}
 		return nil
+	}
+}
+
+func Filters(predicates ...Predicate) Predicate {
+	return func(node *html.Node) bool {
+		for _, predicate := range predicates {
+			if !predicate(node) {
+				return false
+			}
+		}
+		return true
 	}
 }
 
@@ -91,15 +73,15 @@ func DeleteElementAndMoveChildrenToParent(node, parent *html.Node) error {
 	return nil
 }
 
-func AddAttributeWithFunction(attribute string, function func(node *html.Node) string) Sanitizer {
+func SetAttributeWithExtractor(attribute string, extractor Extractor) Sanitizer {
 	return func(node, parent *html.Node) error {
-		value := function(node)
+		value := extractor(node)
 		SetAttribute(node, attribute, value)
 		return nil
 	}
 }
 
-func AddAttribute(attribute, value string) Sanitizer {
+func SetAttribute0(attribute, value string) Sanitizer {
 	return func(node, parent *html.Node) error {
 		SetAttribute(node, attribute, value)
 		return nil
@@ -122,7 +104,7 @@ func InjectOuterElement(tagName string) Sanitizer {
 	}
 }
 
-func AddStyleDeclaration(property, value string) Sanitizer {
+func SetStyleDeclaration(property, value string) Sanitizer {
 	return func(node, parent *html.Node) error {
 		style := ParseStyle(node)
 		style.SetDeclaration(property, value)
