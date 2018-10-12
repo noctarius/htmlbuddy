@@ -16,3 +16,5 @@
 .idea/
 target/
 *.html
+.DS_Store
+wordpress-sanitizer
