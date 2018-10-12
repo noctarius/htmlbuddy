@@ -11,6 +11,8 @@ import (
 	"os"
 	"strings"
 	"wordpress-sanitizer/sanitizer"
+	"net/http"
+	"io"
 )
 
 var configFlag = flag.String("configuration", "", "")
@@ -21,30 +23,28 @@ func main() {
 	config := *configFlag
 	runtime := goja.New()
 
-	f, err := os.Open(config)
+	script, err := readFile(config)
 	if err != nil {
-		panic(err)
+		log.Fatal(err.Error())
 	}
-	script, err := ioutil.ReadAll(f)
 
 	inputFile := flag.Arg(0)
 
-	input, err := os.Open(inputFile)
+	input, err := readFile(inputFile)
 	if err != nil {
-		panic(err)
+		log.Fatal(err.Error())
 	}
 
-	in, err := ioutil.ReadAll(input)
-	node, err := html.Parse(strings.NewReader(string(in)))
+	node, err := html.Parse(strings.NewReader(input))
 	if err != nil {
-		panic(err)
+		log.Fatal(err.Error())
 	}
 
 	registerNativeImplementations(node, runtime)
 
 	_, err = runtime.RunString(string(script))
 	if err != nil {
-		panic(err)
+		log.Fatal(err.Error())
 	}
 
 	// Remove outer html
@@ -57,8 +57,48 @@ func main() {
 	pretty := hpp.PrPrint(buffer.String())
 	pretty = strings.Replace(pretty, "$$", "&", -1)
 
-	os.Stdout.WriteString(pretty)
+	_, err = os.Stdout.WriteString(pretty)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 }
+
+func readFile(file string) (string, error) {
+	url := strings.ToLower(file)
+	if strings.HasPrefix(url, "http://") || strings.HasPrefix(url, "https://") {
+		return downloadFile(file)
+	}
+
+	input, err := os.Open(file)
+	if err != nil {
+		return "", err
+	}
+	defer input.Close()
+
+	data, err := ioutil.ReadAll(input)
+	if err != nil {
+		return "", err
+	}
+
+	return string(data), nil
+}
+
+func downloadFile(file string) (string, error) {
+	response, err := http.Get(file)
+	if err != nil {
+		return "", err
+	}
+	defer response.Body.Close()
+
+	builder := new(strings.Builder)
+	_, err = io.Copy(builder, response.Body)
+	if err != nil {
+		return "", err
+	}
+
+	return builder.String(), nil
+}
+
 func registerNativeImplementations(node *html.Node, runtime *goja.Runtime) {
 	global := runtime.GlobalObject()
 
