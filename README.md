@@ -11,7 +11,21 @@ Use the _Wordpress Sanitizer_ to automatically fix the HTML according to the cho
 Execute the _Wordpress Sanitizer_ as in the following snippet: 
 
 ```
-./wordpress-sanitizer -configuration=<sanitization.js> </path/to/textfile>
+wordpress-sanitizer -configuration=<sanitization.js> </path/to/textfile>
 ```
 
-The fixed HTML, by default, is printed to stdout. To redirect it into a file use the common OS way, like `> output.file`. 
+The fixed HTML, by default, is printed to stdout. To redirect it into a file use the common OS way, like `> output.file`.
+
+### Installation
+
+On OSX, _Wordpress Sanitizer_ can be installed from Homebrew by adding the external tap.
+
+```
+brew tap noctarius/homebrew-formulae
+```
+
+Afterwards, installing _Wordpress Sanitizer_ itself is as easy as:
+
+```
+brew install noctarius/homebrew-formulae/wordpress-sanitizer
+```
