@@ -1,19 +1,20 @@
 package main
 
 import (
+	"bufio"
+	"errors"
 	"flag"
 	"github.com/Joker/hpp"
 	"github.com/andybalholm/cascadia"
 	"github.com/dop251/goja"
 	"golang.org/x/net/html"
+	"io"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 	"strings"
 	"wordpress-sanitizer/sanitizer"
-	"net/http"
-	"io"
-	"bufio"
 )
 
 var configFlag = flag.String("configuration", "", "")
@@ -129,7 +130,37 @@ func registerNativeImplementations(node *html.Node, runtime *goja.Runtime) {
 
 	api := runtime.NewObject()
 	api.Set("isTextOnly", sanitizer.IsTextOnly)
-	api.Set("parseStyle", sanitizer.ParseStyle)
+	api.Set("parseStyle", func(call goja.FunctionCall) goja.Value {
+		if len(call.Arguments) < 1 {
+			return runtime.NewGoError(errors.New("parseStyle requires 1 arguments: Node"))
+		}
+
+		argument := call.Argument(0)
+		node, ok := argument.Export().(*html.Node)
+		if !ok {
+			return runtime.NewGoError(errors.New("first argument of parseStyle cannot be converted to a Node"))
+		}
+
+		style := sanitizer.ParseStyle(node)
+
+		s := runtime.NewObject()
+		s.Set("getDeclaration", func(key string) (string, bool) {
+			return style.Declaration(key)
+		})
+		s.Set("setDeclaration", func(key, value string) {
+			style.SetDeclaration(key, value)
+		})
+		s.Set("removeDeclaration", func(key string) {
+			style.RemoveDeclaration(key)
+		})
+		s.Set("computeStyle", func() string {
+			return style.ComputeStyle()
+		})
+		s.Set("attachStyle", func(node *html.Node) {
+			style.AttachStyle(node)
+		})
+		return s
+	})
 	api.Set("hasAttribute", sanitizer.HasAttribute)
 	api.Set("getAttribute", sanitizer.GetAttribute)
 	api.Set("setAttribute", sanitizer.SetAttribute)
