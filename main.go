@@ -13,6 +13,7 @@ import (
 	"wordpress-sanitizer/sanitizer"
 	"net/http"
 	"io"
+	"bufio"
 )
 
 var configFlag = flag.String("configuration", "", "")
@@ -28,11 +29,21 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
+	var input string
 	inputFile := flag.Arg(0)
+	if inputFile == "-" {
+		reader := bufio.NewReader(os.Stdin)
+		data, err := ioutil.ReadAll(reader)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+		input = string(data)
 
-	input, err := readFile(inputFile)
-	if err != nil {
-		log.Fatal(err.Error())
+	} else {
+		input, err = readFile(inputFile)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
 	}
 
 	node, err := html.Parse(strings.NewReader(input))
@@ -69,11 +80,18 @@ func readFile(file string) (string, error) {
 		return downloadFile(file)
 	}
 
-	input, err := os.Open(file)
-	if err != nil {
-		return "", err
+	var input io.Reader
+	if file == "-" {
+		input = bufio.NewReader(os.Stdin)
+
+	} else {
+		var err error
+		input, err = os.Open(file)
+		if err != nil {
+			return "", err
+		}
+		defer input.(io.ReadCloser).Close()
 	}
-	defer input.Close()
 
 	data, err := ioutil.ReadAll(input)
 	if err != nil {
