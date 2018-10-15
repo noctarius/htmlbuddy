@@ -122,20 +122,3 @@ function generateAlt(node) {
 
     return ""
 }
-
-function isCodeBlock(node) {
-    if (!api.isTextOnly(node)) {
-        return false;
-    }
-
-    var textNode = node.FirstChild;
-    var text = textNode.Data.trim();
-
-    if (!text.startsWith("```")) {
-        return false;
-    }
-
-    textNode = node.LastChild;
-    text = textNode.Data.trim();
-    return text.endsWith("```");
-}
