@@ -1,4 +1,4 @@
-enum NodeType {
+declare enum NodeType {
     ErrorNode = 0,
     TextNode = 1,
     DocumentNode = 2,
@@ -7,7 +7,7 @@ enum NodeType {
     DoctypeNode = 5
 }
 
-enum Atom {
+declare enum Atom {
     a = 0x1,
     abbr = 0x4,
     accept = 0x1a06,
@@ -378,13 +378,13 @@ enum Atom {
     xmp = 0x12f03
 }
 
-type Sanitizer = (node: Node, parent: Node) => Error;
-type Sanitization = [String, Sanitizer];
+declare type Sanitizer = (node: Node, parent: Node) => Error;
+declare type Sanitization = [String, Sanitizer];
 
-type Extractor = (node: Node) => String;
-type Predicate = (node: Node) => boolean;
+declare type Extractor = (node: Node) => String;
+declare type Predicate = (node: Node) => boolean;
 
-interface String {
+declare interface String {
     replaceAll(oldValue: String, newValue: String, repeats: number): String;
 
     startsWith(value: String): boolean;
@@ -392,7 +392,7 @@ interface String {
     endsWith(value: String): boolean;
 }
 
-interface Node {
+declare interface Node {
     Parent: Node;
     FirstChild: Node;
     LastChild: Node;
@@ -405,7 +405,7 @@ interface Node {
     Attr: Attribute[];
 }
 
-class Style {
+declare class Style {
     getDeclaration(key: String): [String, boolean];
 
     setDeclaration(key: String, value: String): void;
@@ -417,7 +417,7 @@ class Style {
     attachStyle(node: Node): void;
 }
 
-interface Attribute {
+declare interface Attribute {
     Namespace: String;
     Key: String;
     Val: String;
@@ -455,26 +455,27 @@ interface Api {
     appendNode(node: Node, parent: Node): void;
 }
 
-const api = Api;
 
-const DeleteNodeAndChildren = Sanitizer;
-const DeleteElementAndMoveChildrenToParent = Sanitizer;
-const ReplaceElementAndReassignChildren = function (tagName: String): Sanitizer;
-const InjectOuterElement = function (tagName: String): Sanitizer;
+declare const api: Api;
 
-const SetStyleDeclaration = function (property: String, value: String): Sanitizer;
-const DeleteStyleDeclaration = function (property: String): Sanitizer;
+declare function DeleteNodeAndChildren(node: Node, parent: Node): Error;
+declare function DeleteElementAndMoveChildrenToParent(node: Node, parent: Node): Error;
+declare function ReplaceElementAndReassignChildren(tagName: String): Sanitizer;
+declare function InjectOuterElement(tagName: String): Sanitizer;
 
-const SelectParent = function (sanitizer: Sanitizer): Sanitizer;
-const And = function (...sanitizers: Sanitizer[]): Sanitizer;
+declare function SetStyleDeclaration(property: String, value: String): Sanitizer;
+declare function DeleteStyleDeclaration(property: String): Sanitizer;
 
-const SetAttribute = function (attribute: String, value: String): Sanitizer;
-const SetAttributeWithExtractor = function (attribute: String, extractor: Extractor): Sanitizer;
-const DeleteAttribute = function (attribute: String): Sanitizer;
+declare function SelectParent(sanitizer: Sanitizer): Sanitizer;
+declare function And(...sanitizers: Sanitizer[]): Sanitizer;
 
-const Filter = function (predicate: Predicate, ...sanitizers: Sanitizer[]): Sanitizer;
-const Filters = function (...predicates: Predicate[]): Predicate;
+declare function SetAttribute(attribute: String, value: String): Sanitizer;
+declare function SetAttributeWithExtractor(attribute: String, extractor: Extractor): Sanitizer;
+declare function DeleteAttribute(attribute: String): Sanitizer;
 
-function sanitize(selector: String, sanitizer: Sanitizer): Sanitization;
+declare function Filter(predicate: Predicate, ...sanitizers: Sanitizer[]) : Sanitizer;
+declare function Filters(...predicates: Predicate[]) : Predicate;
 
-function sanitizers(...sanitizations: Sanitization[]): void;
+declare function sanitize(selector: String, sanitizer: Sanitizer): Sanitization;
+
+declare function sanitizers(...sanitizations: Sanitization[]): void;
