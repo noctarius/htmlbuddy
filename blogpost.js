@@ -21,7 +21,8 @@ sanitizers(
     )),
 
     // Set all headers to h3
-    sanitize("h1, h2, h3, h5, h6, h7, h8, h9", ReplaceElementAndReassignChildren("h3")),
+    sanitize("h1, h2, h4, h5, h6, h7, h8, h9",
+        ReplaceElementAndReassignChildren("h3")),
 
     // Remove possible paragraphs before headings
     sanitize("p h1, p h2, p h3, p h4, p h5, p h6, p h7, p h8, p h9", SelectParent(
