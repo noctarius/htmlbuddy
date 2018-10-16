@@ -1,4 +1,4 @@
-package hpp
+package sanitizer
 
 import (
 	"bytes"
@@ -11,6 +11,11 @@ import (
 
 	"golang.org/x/net/html"
 )
+
+// Copied from https://github.com/Joker/hpp and patched
+// the way TextNodes are written to prevent whitespaces
+// and newlines in front or after specific characters
+// like parenthesis, dot, comma or similar.
 
 var TabStr = []byte("    ")
 
@@ -33,6 +38,27 @@ func isVoid(tag []byte) bool {
 	default:
 		return false
 	}
+}
+
+func preventsNewline(text []byte, prevType html.TokenType) bool {
+	switch prevType {
+	case html.StartTagToken:
+		char := text[len(text)-2]
+		if char == '(' || char == '[' || char == '{' ||
+			char == '"' || char == '<' || char == '~' {
+			return true
+		}
+
+	case html.EndTagToken:
+		char := text[0]
+		if char == ')' || char == ']' || char == '}' ||
+			char == '.' || char == ',' || char == '"' ||
+			char == '>' || char == '?' || char == '!' {
+			return true
+		}
+	}
+
+	return false
 }
 
 func Print(r io.Reader) []byte {
@@ -97,8 +123,10 @@ Loop:
 			if len(text) > 0 {
 				if bytes.Contains(text, []byte{'\n'}) {
 					if !(prevType == html.EndTagToken && isInline(tagName)) {
-						b.WriteByte('\n')
-						b.Write(bytes.Repeat(TabStr, depth))
+						if !preventsNewline(text, prevType) {
+							b.WriteByte('\n')
+							b.Write(bytes.Repeat(TabStr, depth))
+						}
 					} else {
 						if rb.Match(t) {
 							text = append([]byte{' '}, text...)
@@ -111,8 +139,10 @@ Loop:
 					case utf8.RuneCount(text) > 80, prevType != html.StartTagToken:
 
 						if !(prevType == html.EndTagToken && isInline(tagName)) {
-							b.WriteByte('\n')
-							b.Write(bytes.Repeat(TabStr, depth))
+							if !preventsNewline(text, prevType) {
+								b.WriteByte('\n')
+								b.Write(bytes.Repeat(TabStr, depth))
+							}
 							LongText = true
 						} else {
 							if rb.Match(t) {

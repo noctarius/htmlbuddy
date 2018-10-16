@@ -4,8 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"flag"
-	"github.com/Joker/hpp"
-	"github.com/andybalholm/cascadia"
+			"github.com/andybalholm/cascadia"
 	"github.com/dop251/goja"
 	"golang.org/x/net/html"
 	"io"
@@ -15,7 +14,7 @@ import (
 	"os"
 	"strings"
 	"wordpress-sanitizer/sanitizer"
-)
+	)
 
 var configFlag = flag.String("configuration", "", "")
 
@@ -66,7 +65,7 @@ func main() {
 		html.Render(buffer, node)
 	}
 
-	pretty := hpp.PrPrint(buffer.String())
+	pretty := sanitizer.PrPrint(buffer.String())
 	pretty = strings.Replace(pretty, "$$", "&", -1)
 
 	_, err = os.Stdout.WriteString(pretty)
