@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"flag"
-			"github.com/andybalholm/cascadia"
+	"github.com/andybalholm/cascadia"
 	"github.com/dop251/goja"
 	"golang.org/x/net/html"
 	"io"
@@ -14,7 +14,7 @@ import (
 	"os"
 	"strings"
 	"wordpress-sanitizer/sanitizer"
-	)
+)
 
 var configFlag = flag.String("configuration", "", "")
 
@@ -203,7 +203,7 @@ func sanitize(selector string, sanitizer sanitizer.Sanitizer) *configuration {
 }
 
 func sanitizers(node *html.Node) func(...*configuration) {
-	return func(sanitizers ... *configuration) {
+	return func(sanitizers ...*configuration) {
 		for _, s := range sanitizers {
 			q, err := cascadia.Compile(s.selector)
 			if err != nil {
