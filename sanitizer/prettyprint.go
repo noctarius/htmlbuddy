@@ -45,7 +45,8 @@ func preventsNewline(text []byte, prevType html.TokenType) bool {
 	case html.StartTagToken:
 		char := text[len(text)-2]
 		if char == '(' || char == '[' || char == '{' ||
-			char == '"' || char == '<' || char == '~' {
+			char == '"' || char == '<' || char == '~' ||
+			char == '\'' || char == '#' || char == '@' {
 			return true
 		}
 
@@ -53,7 +54,12 @@ func preventsNewline(text []byte, prevType html.TokenType) bool {
 		char := text[0]
 		if char == ')' || char == ']' || char == '}' ||
 			char == '.' || char == ',' || char == '"' ||
-			char == '>' || char == '?' || char == '!' {
+			char == '>' || char == '?' || char == '!' ||
+			char == ':' || char == ';' || char == '*' ||
+			char == '\'' {
+			return true
+		}
+		if (char == '-' || char == '_') && text[1] != ' ' {
 			return true
 		}
 	}
