@@ -93,7 +93,7 @@ function fixCodeBlock(node) {
     var first = node.FirstChild;
     var last = node.LastChild;
 
-    first.Data = first.Data.substring(3);
+    first.Data = first.Data.substring(4);
     last.Data = last.Data.substring(0, last.Data.length - 4);
 }
 
